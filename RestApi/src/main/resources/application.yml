@@ -1,0 +1,13 @@
+server:
+  port: 8081
+  contextPath: /
+  
+security:
+  oauth2:
+    client:
+      accessTokenUri: http://localhost:8080/oauth/token
+      userAuthorizationUri: http://localhost:8080/oauth/authorize
+      clientId: jaimetest
+      clientSecret: test
+    resource:
+      userInfoUri: http://localhost:8080/user

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Login</title>
+</head>
+<body onload="document.f.username.focus();">
+
+<h1>Login</h1>
+
+<!-- <div th:if="${param.error != null}" style="color: red;">
+    Error: <span th:text="${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"></span>
+</div>
+
+<div th:if="${param.logout != null}" style="color: green;">
+    You are successfully logged out!
+</div> -->
+
+<form action="http://localhost:8080/login" name="f" method="post">
+    <fieldset>
+        <legend>With Username and Password:</legend>
+        <p>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username"/>
+        </p>
+        <p>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password"/>
+        </p>
+        <p>
+            <input name="submit" type="submit" value="Login"/>
+        </p>
+    </fieldset>
+</form>
+</body>
+</html>
