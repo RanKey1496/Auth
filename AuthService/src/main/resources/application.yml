@@ -8,6 +8,13 @@ security:
   security-realm: JWT Example Realm
   
   jwt:
+    certificate:
+      store:
+        file: classpath:/certificate/my-auth-server.jks
+        password: storepassword
+      key:
+        alias: myauthserver
+        password: keypassword
     client-id: jaimetest
     client-secret: test
     grant-type: password

@@ -3,9 +3,11 @@ package com.jaime.auth.config;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -45,6 +47,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
+	@Autowired
+	@Qualifier("userDetailsServiceImp")
+	private UserDetailsService userDetailsService;
+	
 	// clientId: Define el id de la aplicación que está autorizada para autenticar
 	// clientSecret: Es la contraseña de la aplicación que está autorizada
 	// Ambos datos deben migrase a una base de datos
@@ -57,9 +63,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 				.inMemory()
 				.withClient(clientId)
 				.secret(clientSecret)
-				.authorizedGrantTypes(grantType)
+				.authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit")
 				.scopes(scopeRead, scopeWrite)
-				.resourceIds(resourceIds);
+				.resourceIds(resourceIds)
+				.accessTokenValiditySeconds(60)
+				.refreshTokenValiditySeconds(1800);
 	}
 	
 	@Override
@@ -69,6 +77,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		endpoints.tokenStore(tokenStore)
 				.accessTokenConverter(accessTokenConverter)
 				.tokenEnhancer(enhancerChain)
-				.authenticationManager(authenticationManager);
+				.authenticationManager(authenticationManager)
+				.userDetailsService(userDetailsService);
 	}
 }

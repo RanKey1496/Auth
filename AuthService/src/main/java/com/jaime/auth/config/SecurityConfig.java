@@ -1,11 +1,14 @@
 package com.jaime.auth.config;
 
+import java.security.KeyPair;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -19,20 +22,33 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
-	@Value("${security.signing-key}")
-	private String signingKey;
+	//@Value("${security.signing-key}")
+	//private String signingKey;
 
 	@Value("${security.encoding-strength}")
 	private Integer encodingStrength;
 
 	@Value("${security.security-realm}")
 	private String securityRealm;
+	
+	@Value("${security.jwt.certificate.store.file}")
+	private Resource keystore;
+	
+	@Value("${security.jwt.certificate.store.password}")
+	private String keyStorePassword;
+	
+	@Value("${security.jwt.certificate.key.alias}")
+	private String keyAlias;
+	
+	@Value("${security.jwt.certificate.key.password}")
+	private String keyPassword;
 
 	@Autowired
 	@Qualifier("userDetailsServiceImp")
@@ -66,8 +82,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	// Sirve para convertir los tokens entrantes con la llave setteada anteriormente
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
+		//JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+		//converter.setSigningKey(signingKey);
+		//return converter;
+		
+		KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(keystore, keyStorePassword.toCharArray());
+		KeyPair keyPair = keyStoreKeyFactory.getKeyPair(keyAlias, keyPassword.toCharArray());
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-		converter.setSigningKey(signingKey);
+		converter.setKeyPair(keyPair);
 		return converter;
 	}
 	
