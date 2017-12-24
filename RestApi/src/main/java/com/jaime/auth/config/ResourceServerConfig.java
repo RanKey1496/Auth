@@ -18,7 +18,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	public void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
-				.anyRequest().authenticated()
+				.antMatchers("/service").authenticated()
+				.antMatchers("/v2**").anonymous()
 			.and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}

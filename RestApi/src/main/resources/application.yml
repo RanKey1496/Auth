@@ -1,7 +1,38 @@
 server:
   port: 8081
   contextPath: /
-  
+spring:
+  SAP2:
+    datasource:
+      test-on-borrow: true
+      validationQuery: SELECT 1 
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost/SAP2
+      username: root
+      password: 
+        
+  SAP2General:
+    datasource:
+      test-on-borrow: true
+      validationQuery: SELECT 1 
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost/SAP2General
+      username: root
+      password:     
+  jpa:
+    properties:
+      org.hibernate.envers.audit_table_suffix: _Log
+      org.hibernate.envers.default_schema: ${SAP2General}
+      org.hibernate.envers.default_catalog: SAP2General
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        use_sql_comments: true
+        format_sql: true
+        show-sql: true
+    hibernate:
+      naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
+      ddl-auto: update
+      
 security:
   oauth2:
     client:
