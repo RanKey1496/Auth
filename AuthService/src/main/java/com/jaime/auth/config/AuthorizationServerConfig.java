@@ -61,13 +61,19 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
 		configurer
 				.inMemory()
-				.withClient(clientId)
-				.secret(clientSecret)
-				.authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit")
-				.scopes(scopeRead, scopeWrite)
-				.resourceIds(resourceIds)
-				.accessTokenValiditySeconds(60)
-				.refreshTokenValiditySeconds(1800);
+					.withClient(clientId)
+					.secret(clientSecret)
+					.authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit")
+					.scopes(scopeRead, scopeWrite)
+					.resourceIds(resourceIds)
+					.accessTokenValiditySeconds(9000)
+					.refreshTokenValiditySeconds(18000)
+				.and()
+					.withClient("infinite")
+					.secret("test")
+					.authorizedGrantTypes("password")
+					.scopes("read", "write")
+					.accessTokenValiditySeconds(-1);
 	}
 	
 	@Override
